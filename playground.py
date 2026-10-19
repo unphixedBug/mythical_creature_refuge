@@ -1,22 +1,20 @@
-from src.refuge.models.creature import Creature
 from src.refuge.exceptions import ValidationError
+from src.refuge.models.species import Dragon, Phoenix, Unicorn, Griffin
 
-frostbite = Creature("Frostbite", "Dragon", "Nordic Realms", 95)
-print(repr(frostbite))
+residents = [
+    Dragon("Frostbite", "Nordic Realms", 95, "ice"),
+    Phoenix("Ember", "Ashlands", 72),
+    Unicorn("Pebble", "Misty Hills", 25),
+    Griffin("Talon", "Eagle Peaks", 80),
+]
+for resident in residents:
+    send_to_field(resident)
 
-frostbite.power_level = 80
-print(frostbite.power_level)
-
-for bad_value in (150, -3, "95", True):
-    try:
-        frostbite.power_level = bad_value
-    except ValidationError as error:
-        print(error)
+print(residents[0])
+print(repr(residents[0]))
+print(residents[1].resurrect())
 
 try:
-    frostbite.origin = "Elsewhere"
-except AttributeError:
-    print("origin is read-only")
-
-print(frostbite._Creature__origin)
-print(frostbite.in_refuge)
+    Creature("Nobody", "Dragon", "Nowhere", 10)
+except TypeError:
+    print("Creature is abstract")

@@ -1,6 +1,7 @@
-from src.refuge.exceptions import ValidationError
+from src.refuge.exceptions import ValidationError, MissionRefusedError
+from abc import ABC, abstractmethod
 
-class Creature:
+class Creature(ABC):
     _total_creatures = 0
     VALID_SPECIES = ("Dragon", "Phoenix", "Unicorn", "Griffin", "Basilisk")
 
@@ -17,7 +18,24 @@ class Creature:
         Creature._total_creatures += 1
 
     def send_on_mission(self):
+        '''
+        Raises MissionRefusedError when the creature cannot leave.
+        '''
+        if not self._in_refuge:
+            raise MissionRefusedError(f"{self.name} is already on a mission.")
+
+        reason = self.refusal_reason()     
+
+        if reason != None:
+            raise MissionRefusedError(reason)
+        
         self._in_refuge = False
+        
+    def refusal_reason(self):
+        '''
+        Later
+        '''
+        return None
 
     def return_to_refuge(self):
         self._in_refuge = True
@@ -71,3 +89,15 @@ class Creature:
 
     def __repr__(self):
         return f"Creature(name={self.name!r}, species={self.species!r}, origin={self.origin!r}, power_level={self.power_level!r})"
+
+    @abstractmethod
+    def mission_duration_days():
+        '''
+        Subclass
+        '''
+
+    @abstractmethod
+    def special_ability():
+        '''
+        Subclass
+        '''

@@ -7,3 +7,8 @@ class ValidationError(RefugeError):
     '''
     ValidationError
     '''
+
+class MissionRefusedError(RefugeError):
+    '''
+    ValidationError
+    '''
