@@ -4,7 +4,7 @@ class Creature:
 
     def __init__(self, name, species, origin, power_level):
         if not Creature.is_valid_species(species):
-            raise ValueError(f"Unknown species: {species}.")
+            raise ValueError(f"Unknown species: {species!r}.")
 
         self.name = name
         self.species = species
@@ -26,3 +26,22 @@ class Creature:
     @staticmethod
     def is_valid_species(species: str) -> bool:
         return species in Creature.VALID_SPECIES
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data["name"], data["species"], data["origin"], data["power_level"])
+
+    @classmethod
+    def from_string(cls, text):
+        attr = text.split(", ")
+
+        if len(attr) != 4:
+            raise ValueError(f"Expected 4 fields, got {len(attr)}")
+
+        name, species, origin, power_level = attr
+
+        return cls(name, species, origin, int(power_level))
+
+    @classmethod
+    def get_total_creatures(cls):
+        return cls._total_creatures

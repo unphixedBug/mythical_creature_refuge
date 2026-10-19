@@ -314,7 +314,6 @@ Unknown species: 'Goblin'.
 - the origin of another one was overwritten by mistake, although origins are permanent.
 
 **Tasks.**
-
 1. Create `refuge/exceptions.py` with two classes:
    - `RefugeError(Exception)`, the base of every business error;
    - `ValidationError(RefugeError)`.
@@ -327,6 +326,10 @@ Unknown species: 'Goblin'.
 3. Make `origin` **private** (`__origin`) and expose it through a **read-only** property, with no setter.
 4. Expose `in_refuge` as a **read-only** property. The state may only change through `send_on_mission()` and `return_to_refuge()`.
 5. Add `__repr__`, returning `Creature(name='Frostbite', species='Dragon', origin='Nordic Realms', power_level=95)`. Use `!r` in the f-string.
+
+**Clarifications.**
+The body stays empty. Apart from the docstring, these classes need no init, no method and no attribute. By inheriting from Exception, they already carry a message and can be raised and caught like any built-in exception. 
+Their only job for now is to give errors a name that belongs to your domain.
 
 **Verify.**
 
