@@ -1,15 +1,22 @@
 from src.refuge.models.creature import Creature
+from src.refuge.exceptions import ValidationError
 
-row = {"id": 1, "name": "Frostbite", "species": "Dragon", "origin": "Nordic Realms", "power_level": 95}
-frostbite = Creature.from_dict(row)
-ember = Creature.from_string("Ember, Phoenix, Ashlands, 72")
+frostbite = Creature("Frostbite", "Dragon", "Nordic Realms", 95)
+print(repr(frostbite))
 
-print(frostbite)
-print(ember.power_level + 1)
-print(Creature.is_valid_species("Griffin"), Creature.is_valid_species("Goblin"))
-print(Creature.get_total_creatures())
+frostbite.power_level = 80
+print(frostbite.power_level)
+
+for bad_value in (150, -3, "95", True):
+    try:
+        frostbite.power_level = bad_value
+    except ValidationError as error:
+        print(error)
 
 try:
-    Creature.from_string("Grub, Goblin, Dark Caves, 12")
-except ValueError as error:
-    print(error)
+    frostbite.origin = "Elsewhere"
+except AttributeError:
+    print("origin is read-only")
+
+print(frostbite._Creature__origin)
+print(frostbite.in_refuge)

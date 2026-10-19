@@ -1,18 +1,20 @@
+from src.refuge.exceptions import ValidationError
+
 class Creature:
     _total_creatures = 0
     VALID_SPECIES = ("Dragon", "Phoenix", "Unicorn", "Griffin", "Basilisk")
 
     def __init__(self, name, species, origin, power_level):
         if not Creature.is_valid_species(species):
-            raise ValueError(f"Unknown species: {species!r}.")
+            raise ValidationError(f"Unknown species: {species!r}.")
 
         self.name = name
         self.species = species
-        self.origin = origin
+        self.__origin = origin
         self.power_level = power_level
+        self._in_refuge = True
 
         Creature._total_creatures += 1
-        self._in_refuge = True
 
     def send_on_mission(self):
         self._in_refuge = False
@@ -36,7 +38,7 @@ class Creature:
         attr = text.split(", ")
 
         if len(attr) != 4:
-            raise ValueError(f"Expected 4 fields, got {len(attr)}")
+            raise ValidationError(f"Got {len(attr)} informations instead of 4")
 
         name, species, origin, power_level = attr
 
@@ -45,3 +47,27 @@ class Creature:
     @classmethod
     def get_total_creatures(cls):
         return cls._total_creatures
+
+    @property
+    def power_level(self):
+        return self._power_level
+
+    @power_level.setter
+    def power_level(self, value):
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise ValidationError(f"Must be an int, got {type(value).__name__}")
+        if value < 0 or value > 100:
+            raise ValidationError(f"Must be between 0 and 100, got {value}")
+
+        self._power_level = value
+
+    @property
+    def origin(self):
+        return self.__origin
+
+    @property
+    def in_refuge(self):
+        return self._in_refuge
+
+    def __repr__(self):
+        return f"Creature(name={self.name!r}, species={self.species!r}, origin={self.origin!r}, power_level={self.power_level!r})"
