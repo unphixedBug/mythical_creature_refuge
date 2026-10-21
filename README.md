@@ -549,6 +549,7 @@ def end_of_day_report(residents: list) -> None:
    Add a `StatueDragon` to the list and run the report. Explain precisely why this subclass violates the Liskov Substitution Principle.
 3. A colleague argues: *"The `refusal_reason()` override is fine, the parent's contract allows refusals."* Is the colleague technically right? Is the design right? (Think about the *is-a* test.)
 4. Propose a corrected design in a few lines, with class names and one sentence each. You do not have to implement it.
+
 5. **Duck typing.** Add `RoboticGuard("Sentinel", "RX-7")` to the list and run the report again. The class has **no parent**:
 
    ```python

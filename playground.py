@@ -3,26 +3,25 @@ from src.refuge.models.species import Dragon, Phoenix, Unicorn, Griffin
 from src.refuge.models.creature import Creature
 from src.refuge.models.mixins import FlyingMixin
 
-row = {"id": 1, "name": "Frostbite", "species": "Dragon", "origin": "Nordic Realms", "power_level": 95}
-
-class WrongOrderDragon(Creature, FlyingMixin):
-    """Même chose que Dragon, mais avec l'ordre des parents inversé."""
-
-    def mission_duration_days(self) -> int:
-        return 14
+class RoboticGuard:
+    def __init__(self, name: str, model: str) -> None:
+        self.name = name
+        self.model = model
 
     def special_ability(self) -> str:
-        return "..."
+        return f"{self.name} patrols the perimeter and fires laser beams."
 
-frostbite = Dragon("Frostbite", "Nordic Realms", 95, "ice")
-print([cls.__name__ for cls in Dragon.__mro__])
-print(frostbite.travel_mode())
-print(frostbite.fly("Frozen Peaks"))
-print(frostbite.flight_log)
-print(Unicorn("Moonbeam", "Crystal Lake", 67).travel_mode())
+    def mission_duration_days(self) -> int:
+        return 1
 
-print([cls.__name__ for cls in WrongOrderDragon.__mro__])
-print(WrongOrderDragon("Test", "Dragon", "Lab", 10).travel_mode())
+    def __str__(self) -> str:
+        return f"{self.name} [Robotic Guard — model {self.model}]"
 
-print(isinstance(frostbite, Creature), isinstance(frostbite, FlyingMixin),
-      issubclass(Unicorn, FlyingMixin), issubclass(Phoenix, Dragon))
+def end_of_day_report(residents: list) -> None:
+    for resident in residents:
+        print(f"--- {resident.name} ---")
+        print(resident.special_ability())
+        print(f"Mission duration if sent: {resident.mission_duration_days()} days")
+        print(resident)
+
+end_of_day_report([RoboticGuard("Sentinel", "RX-7")])
