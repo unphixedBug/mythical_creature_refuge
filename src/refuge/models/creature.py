@@ -5,7 +5,7 @@ class Creature(ABC):
     _total_creatures = 0
     VALID_SPECIES = ("Dragon", "Phoenix", "Unicorn", "Griffin", "Basilisk")
 
-    def __init__(self, name, species, origin, power_level):
+    def __init__(self, name, species, origin, power_level) -> None:
         if not Creature.is_valid_species(species):
             raise ValidationError(f"Unknown species: {species!r}.")
 
@@ -17,7 +17,9 @@ class Creature(ABC):
 
         Creature._total_creatures += 1
 
-    def send_on_mission(self):
+        super().__init__()
+
+    def send_on_mission(self) -> None:
         '''
         Raises MissionRefusedError when the creature cannot leave.
         '''
@@ -26,21 +28,21 @@ class Creature(ABC):
 
         reason = self.refusal_reason()     
 
-        if reason != None:
+        if reason:
             raise MissionRefusedError(reason)
         
         self._in_refuge = False
         
-    def refusal_reason(self):
+    def refusal_reason(self) -> None | str:
         '''
         Later
         '''
         return None
 
-    def return_to_refuge(self):
+    def return_to_refuge(self) -> bool:
         self._in_refuge = True
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} the {self.species} (origin: {self.origin}) [{"in refuge" if self._in_refuge else "on mission"}]"
 
     @staticmethod
@@ -48,11 +50,11 @@ class Creature(ABC):
         return species in Creature.VALID_SPECIES
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data) -> Self:
         return cls(data["name"], data["species"], data["origin"], data["power_level"])
 
     @classmethod
-    def from_string(cls, text):
+    def from_string(cls, text) -> Self:
         attr = text.split(", ")
 
         if len(attr) != 4:
@@ -63,15 +65,15 @@ class Creature(ABC):
         return cls(name, species, origin, int(power_level))
 
     @classmethod
-    def get_total_creatures(cls):
+    def get_total_creatures(cls) -> int:
         return cls._total_creatures
 
     @property
-    def power_level(self):
+    def power_level(self) -> int:
         return self._power_level
 
     @power_level.setter
-    def power_level(self, value):
+    def power_level(self, value) -> int:
         if not isinstance(value, int) or isinstance(value, bool):
             raise ValidationError(f"Must be an int, got {type(value).__name__}")
         if value < 0 or value > 100:
@@ -80,24 +82,27 @@ class Creature(ABC):
         self._power_level = value
 
     @property
-    def origin(self):
+    def origin(self) -> str:
         return self.__origin
 
     @property
-    def in_refuge(self):
+    def in_refuge(self) -> bool:
         return self._in_refuge
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Creature(name={self.name!r}, species={self.species!r}, origin={self.origin!r}, power_level={self.power_level!r})"
 
     @abstractmethod
-    def mission_duration_days():
+    def mission_duration_days() -> int:
         '''
         Subclass
         '''
 
     @abstractmethod
-    def special_ability():
+    def special_ability() -> str:
         '''
         Subclass
         '''
+
+    def travel_mode(self) -> str:
+        return f"on foot"

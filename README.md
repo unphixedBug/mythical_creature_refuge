@@ -471,6 +471,7 @@ Creature is abstract
    - `travel_mode()` returns `"by air"`;
    - `fly(destination: str) -> str` builds the message `"{name} soars toward {destination}."`, appends it to `flight_log` and returns it.
 4. Apply the mixin to `Dragon`, `Phoenix` and `Griffin`, placing it **first**: `class Dragon(FlyingMixin, Creature)`.
+
 5. **Experiment** in the playground:
    - create `WrongOrderDragon(Creature, FlyingMixin)` with trivial implementations of the two abstract methods, then compare its MRO and its `travel_mode()`;
    - temporarily remove `super().__init__()` from `Creature.__init__`, call `WrongOrderDragon(...).flight_log`, and observe the error;

@@ -1,30 +1,28 @@
 from src.refuge.exceptions import ValidationError, MissionRefusedError
 from src.refuge.models.species import Dragon, Phoenix, Unicorn, Griffin
 from src.refuge.models.creature import Creature
+from src.refuge.models.mixins import FlyingMixin
 
-def send_to_field(creature):
-    print(creature.special_ability())
+row = {"id": 1, "name": "Frostbite", "species": "Dragon", "origin": "Nordic Realms", "power_level": 95}
 
-    try:
-        creature.send_on_mission()
-        print(f"-> away for {creature.mission_duration_days()} days")
-    except MissionRefusedError as error:
-        print(f"❌ refused: {error}")
+class WrongOrderDragon(Creature, FlyingMixin):
+    """Même chose que Dragon, mais avec l'ordre des parents inversé."""
 
-residents = [
-    Dragon("Frostbite", "Nordic Realms", 95, "ice"),
-    Phoenix("Ember", "Ashlands", 72),
-    Unicorn("Pebble", "Misty Hills", 25),
-    Griffin("Talon", "Eagle Peaks", 80),
-]
-for resident in residents:
-    send_to_field(resident)
+    def mission_duration_days(self) -> int:
+        return 14
 
-print(residents[0])
-print(repr(residents[0]))
-print(residents[1].resurrect())
+    def special_ability(self) -> str:
+        return "..."
 
-try:
-    Creature("Nobody", "Dragon", "Nowhere", 10)
-except TypeError:
-    print("Creature is abstract")
+frostbite = Dragon("Frostbite", "Nordic Realms", 95, "ice")
+print([cls.__name__ for cls in Dragon.__mro__])
+print(frostbite.travel_mode())
+print(frostbite.fly("Frozen Peaks"))
+print(frostbite.flight_log)
+print(Unicorn("Moonbeam", "Crystal Lake", 67).travel_mode())
+
+print([cls.__name__ for cls in WrongOrderDragon.__mro__])
+print(WrongOrderDragon("Test", "Dragon", "Lab", 10).travel_mode())
+
+print(isinstance(frostbite, Creature), isinstance(frostbite, FlyingMixin),
+      issubclass(Unicorn, FlyingMixin), issubclass(Phoenix, Dragon))
