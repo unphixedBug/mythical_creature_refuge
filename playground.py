@@ -1,5 +1,15 @@
-from src.refuge.exceptions import ValidationError
+from src.refuge.exceptions import ValidationError, MissionRefusedError
 from src.refuge.models.species import Dragon, Phoenix, Unicorn, Griffin
+from src.refuge.models.creature import Creature
+
+def send_to_field(creature):
+    print(creature.special_ability())
+
+    try:
+        creature.send_on_mission()
+        print(f"-> away for {creature.mission_duration_days()} days")
+    except MissionRefusedError as error:
+        print(f"❌ refused: {error}")
 
 residents = [
     Dragon("Frostbite", "Nordic Realms", 95, "ice"),
