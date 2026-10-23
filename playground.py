@@ -1,27 +1,21 @@
 from src.refuge.exceptions import ValidationError, MissionRefusedError
-from src.refuge.models.species import Dragon, Phoenix, Unicorn, Griffin
+from src.refuge.models.species import Dragon, Basilisk, Phoenix, Unicorn, Griffin
 from src.refuge.models.creature import Creature
 from src.refuge.models.mixins import FlyingMixin
+from src.refuge.models.employee import Handler, Veterinarian
 
-class RoboticGuard:
-    def __init__(self, name: str, model: str) -> None:
-        self.name = name
-        self.model = model
+aldric = Handler("Aldric Stone", "aldric@refuge.example", 5)
+brynn = Handler("Brynn Ashford", "brynn@refuge.example", 3)
+dara = Veterinarian("Dara Quill", "dara@refuge.example")
+frostbite = Dragon("Frostbite", "Nordic Realms", 95, "ice")
 
-    def special_ability(self) -> str:
-        return f"{self.name} patrols the perimeter and fires laser beams."
+for employee in (aldric, brynn, dara):
+    print(employee, "|", employee.describe_duties())
+print([e.full_name for e in (aldric, brynn, dara) if e.can_escort(frostbite)])
+print(dara.can("perform_checkup"), brynn.can("perform_checkup"))
+print(dara.perform_checkup(Basilisk("Gorgo", "Serpent Marsh", 91), "quarantine", "Unstable petrifying gaze"))
 
-    def mission_duration_days(self) -> int:
-        return 1
-
-    def __str__(self) -> str:
-        return f"{self.name} [Robotic Guard — model {self.model}]"
-
-def end_of_day_report(residents: list) -> None:
-    for resident in residents:
-        print(f"--- {resident.name} ---")
-        print(resident.special_ability())
-        print(f"Mission duration if sent: {resident.mission_duration_days()} days")
-        print(resident)
-
-end_of_day_report([RoboticGuard("Sentinel", "RX-7")])
+try:
+    Handler("Cael Morrow", "cael@refuge.example", 7)
+except ValidationError as error:
+    print(error)
